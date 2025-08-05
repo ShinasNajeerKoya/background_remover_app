@@ -1,0 +1,9 @@
+builders:
+  icon_builder:
+    import: "package:icon_builder/builder.dart"
+    builder_factories: ["iconBuilder"]
+#    build_extensions: { ".dart": [".g.dart"] }
+    build_extensions: { ".dart": ["app_icons.dart"] }
+#    auto_apply: none
+    auto_apply: root_package
+    build_to: source
