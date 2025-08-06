@@ -20,6 +20,8 @@ class AppColors {
   static const Color kSplashBlackBgLeftColor = Color(0xFF191919);
   static const Color kSplashBlackBgRightColor = Color(0xFF000000);
   static const Color kPrimaryGoldColor = Color(0xFFAD925F);
+  static const Color kHomeLogoGoldColor = Color(0xFFF3D496);
+  static const Color kHomeBorderGoldColor = Color(0xFFCCAC6C);
 }
 
 final List<Color> lightColors = [
@@ -29,4 +31,9 @@ final List<Color> lightColors = [
   Color(0xFFDAFFDB), // light green
   Color(0xFFFFD7DC), // light red/pink
   Color(0xFFE9DAFF), // light purple
+];
+
+final List<Color> homeGoldenGradient = [
+  Color(0xFFF3D496), // light yellow
+  Color(0xFFC9A968), // light purple
 ];
