@@ -17,7 +17,7 @@
         tools:ignore="ScopedStorage" />
 
     <application
-        android:label="background_remover_app"
+        android:label="Prestige Pixels"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
