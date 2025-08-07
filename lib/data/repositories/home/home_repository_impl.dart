@@ -130,4 +130,9 @@ class HomeRepositoryImpl implements HomeRepository {
     final result = await PermissionService.requestMediaPermission();
     return result.isAuth;
   }
+
+  @override
+  Future<void> completeOnboarding() async {
+    await Future.delayed(Duration(milliseconds: 1300));
+  }
 }

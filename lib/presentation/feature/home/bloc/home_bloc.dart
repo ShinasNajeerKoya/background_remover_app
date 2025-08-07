@@ -1,5 +1,8 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
 
 import '../../../../core/app_permissions.dart';
 import '../../../../shared/mixins/safe_emit_mixin/safe_emit_mixin.dart';
@@ -201,6 +204,41 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
       showBackgroundColorPicker: !state.showBackgroundColorPicker,
     ));
   }
+
+  Future<void> completeOnboardingFlow() async {
+    safeEmit(state.copyWith(isLoading: true));
+    try {
+      await _repository.completeOnboarding();
+      safeEmit(state.copyWith(isCompleted: true, isLoading: false));
+    } catch (_) {
+      safeEmit(state.copyWith(isLoading: false, error: true));
+    }
+  }
+
+
+
+  void completeSlider() {
+    // Trigger some action or log
+    debugPrint('Slider successful');
+  }
+
+  void onSwipeUpdate(double delta, double maxDrag) {
+    final newX = (state.dragX + delta).clamp(0.0, maxDrag);
+    safeEmit(state.copyWith(dragX: newX));
+  }
+
+  void updateDragX(double x) {
+    safeEmit(state.copyWith(dragX: x));
+  }
+
+  void onSwipeEnd(double maxDrag) {
+    if (!state.sliderCompleted && state.dragX >= maxDrag) {
+      log('slide completed');
+      safeEmit(state.copyWith(sliderCompleted: true));
+      completeOnboardingFlow();
+    }
+  }
+
 
   /// Reset state
   void reset() {

@@ -22,6 +22,10 @@ abstract class HomeState with _$HomeState {
     @JsonKey(includeFromJson: false, includeToJson: false) Color? selectedBackgroundColor,
     @Default(false) bool showBackgroundColorPicker,
     @Default(0) int processingProgress,
+
+    @Default(false) bool isCompleted,
+    @Default(false) bool sliderCompleted,
+    @Default(0.0) double dragX,
   }) = _HomeState;
 
   factory HomeState.fromJson(Map<String, dynamic> json) =>

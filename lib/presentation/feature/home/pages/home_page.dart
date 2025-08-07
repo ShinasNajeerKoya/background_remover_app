@@ -14,6 +14,9 @@ import 'package:background_remover_app/presentation/feature/home/bloc/home_state
 
 import 'package:get_it/get_it.dart';
 
+import '../../onboarding/widgets/swipe_to_get_started_widget.dart';
+import '../widgets/swipe_to_get_started_widget.dart';
+
 @RoutePage()
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -248,67 +251,181 @@ class _HomePageState extends State<HomePage> {
           builder: (context, state) {
             final isDataEmpty = state.selectedImage == null;
 
-            return SizedBox(
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  verticalMargin36,
-                  CustomSvgIcon(AppIcons.kSplashGoldLogo, color: AppColors.kHomeLogoGoldColor, height: 50.h),
-                  verticalMargin36,
+            return SingleChildScrollView(
+              child: SizedBox(
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    verticalMargin36,
+                    CustomSvgIcon(AppIcons.kSplashGoldLogo, color: AppColors.kHomeLogoGoldColor, height: 50.h),
+                    verticalMargin36,
 
-                  isDataEmpty
-                      ? Container(
-                        margin: horizontalPadding16,
-                        child: ClipPath(
-                          clipper: NotchedRoundedClipper(),
-                          child: Container(
-                            height: 420.h,
-                            padding: EdgeInsets.only(left: 10.w, right: 25.w, top: 60.h, bottom: 35.h),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                                colors: homeGoldenGradient,
+                    isDataEmpty
+                        ? Container(
+                          margin: horizontalPadding16,
+                          child: ClipPath(
+                            clipper: NotchedRoundedClipper(),
+                            child: Container(
+                              height: 420.h,
+                              padding: EdgeInsets.only(left: 10.w, right: 25.w, top: 60.h, bottom: 35.h),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                  colors: homeGoldenGradient,
+                                ),
+                              ),
+                              width: double.infinity,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  CustomSvgIcon(AppIcons.kHomeScreenWelcomeText),
+                                  Row(
+                                    children: [
+                                      Spacer(),
+                                      CustomSvgIcon(AppIcons.kLogoBlack, height: 40.h),
+                                      horizontalMargin12,
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                            width: double.infinity,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                CustomSvgIcon(AppIcons.kHomeScreenWelcomeText),
-                                Row(
-                                  children: [
-                                    Spacer(),
-                                    CustomSvgIcon(AppIcons.kLogoBlack, height: 40.h),
-                                    horizontalMargin12,
-                                  ],
+                          ),
+                        )
+                        : Container(
+                          margin: horizontalPadding16,
+                          child: Stack(
+                            children: [
+                              CustomPaint(
+                                painter: NotchedBorderPainter(
+                                  fillColor: Colors.black,
+                                  borderColor: AppColors.kPrimaryGoldColor,
+                                  strokeWidth: 1.5,
                                 ),
-                              ],
-                            ),
+                                child: SizedBox(height: 420.h, width: double.infinity),
+                              ),
+                              ClipPath(
+                                clipper: NotchedRoundedClipper(),
+                                child: Image.file(
+                                  state.selectedImage!,
+                                  fit: BoxFit.cover,
+                                  height: 420.h,
+                                  width: double.infinity,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      )
-                      : Container(
-                        margin: horizontalPadding16,
-                        child: CustomPaint(
-                          painter: NotchedBorderPainter(
-                            fillColor: Colors.black,
-                            borderColor: AppColors.kPrimaryGoldColor,
-                            strokeWidth: 1.5,
-                          ),
-                          child: SizedBox(
-                            height: 420.h,
-                            width: double.infinity,
-                            child: Column(
-                              children: [
-                                // Your content inside the container
-                              ],
-                            ),
-                          ),
+
+                    SwipeToGetStartedWidget(homeBloc: homeBloc),
+
+                    if (state.isLoading) const CircularProgressIndicator(),
+                    if (state.isProcessing) ...[
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 10),
+                      Text('Processing: ${state.processingProgress}%'),
+                    ],
+                    if (state.isSaving) ...[
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 10),
+                      const Text('Saving image...'),
+                    ],
+
+                    const SizedBox(height: 20),
+
+                    // Pick Image Buttons
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed:
+                              (state.isLoading || state.isProcessing || state.isSaving)
+                                  ? null
+                                  : () => homeBloc.pickImageFromGallery(),
+                          icon: const Icon(Icons.photo_library),
+                          label: const Text('Gallery'),
                         ),
+                        ElevatedButton.icon(
+                          onPressed:
+                              (state.isLoading || state.isProcessing || state.isSaving)
+                                  ? null
+                                  : () => homeBloc.pickImageFromCamera(),
+                          icon: const Icon(Icons.camera_alt),
+                          label: const Text('Camera'),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // Remove BG / Save
+                    if (state.selectedImage != null)
+                      ElevatedButton.icon(
+                        onPressed: state.isProcessing || state.isSaving ? null : () => homeBloc.removeBackground(),
+                        icon: const Icon(Icons.auto_fix_high),
+                        label: const Text('Remove Background'),
                       ),
-                ],
+
+                    if (state.processedImage != null) ...[
+                      const SizedBox(height: 10),
+                      ElevatedButton.icon(
+                        onPressed: state.isSaving ? null : () => homeBloc.saveProcessedImage(),
+                        icon: const Icon(Icons.save),
+                        label: const Text('Save to Gallery'),
+                      ),
+                    ],
+
+                    const SizedBox(height: 20),
+
+                    // Background color picker
+                    if (state.selectedImage != null)
+                      ElevatedButton.icon(
+                        onPressed: () => homeBloc.toggleBackgroundColorPicker(),
+                        icon: const Icon(Icons.color_lens),
+                        label: const Text('Change Background Color'),
+                      ),
+
+                    if (state.showBackgroundColorPicker) ...[
+                      const SizedBox(height: 20),
+                      const Text('Select Background Color:'),
+                      const SizedBox(height: 10),
+                      Wrap(
+                        spacing: 10,
+                        children:
+                            [
+                              Colors.white,
+                              Colors.red,
+                              Colors.green,
+                              Colors.blue,
+                              Colors.yellow,
+                              Colors.purple,
+                              Colors.transparent,
+                            ].map((color) {
+                              return GestureDetector(
+                                onTap: () => homeBloc.changeBackgroundColor(color),
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: color == Colors.transparent ? Colors.grey.shade300 : color,
+                                    border: Border.all(
+                                      color: state.selectedBackgroundColor == color ? Colors.black : Colors.grey,
+                                      width: 2,
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child:
+                                      color == Colors.transparent
+                                          ? const Icon(Icons.not_interested, color: Colors.red)
+                                          : null,
+                                ),
+                              );
+                            }).toList(),
+                      ),
+                    ],
+                  ],
+                ),
               ),
             );
           },
@@ -317,7 +434,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
 
 class NotchedBorderPainter extends CustomPainter {
   final Color fillColor;
@@ -350,50 +466,6 @@ class NotchedBorderPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-// class NotchedRoundedClipper extends CustomClipper<Path> {
-//   @override
-//   Path getClip(Size size) {
-//     Path path = Path();
-//
-//     // Example shape: rounded rectangle with a notch at the top center
-//     double notchWidth = 40;
-//     double notchHeight = 20;
-//     double radius = 16;
-//
-//     double primaryWidth = size.width / 3;
-//     double secondaryWidth = primaryWidth * 2;
-//
-//     path.moveTo(0, radius);
-//     path.quadraticBezierTo(0, 0, radius, 0);
-//
-//     // left slope
-//     path.lineTo(primaryWidth - notchWidth, 0);
-//     path.quadraticBezierTo(primaryWidth, 0, primaryWidth, 10);
-//
-//     path.lineTo(primaryWidth, 10);
-//     path.quadraticBezierTo(primaryWidth, 20, primaryWidth + notchWidth, 20);
-//
-//     // right slope
-//     path.lineTo(secondaryWidth - notchWidth, 20);
-//     path.quadraticBezierTo(secondaryWidth, 20, secondaryWidth, 10);
-//
-//     path.lineTo(secondaryWidth, 10);
-//     path.quadraticBezierTo(secondaryWidth, 0, secondaryWidth + notchWidth, 0);
-//
-//     path.lineTo(size.width - radius, 0);
-//     path.quadraticBezierTo(size.width, 0, size.width, radius);
-//     path.lineTo(size.width, size.height - radius);
-//     path.quadraticBezierTo(size.width, size.height, size.width - radius, size.height);
-//     path.lineTo(radius, size.height);
-//     path.quadraticBezierTo(0, size.height, 0, size.height - radius);
-//     path.close();
-//
-//     return path;
-//   }
-//
-//   @override
-//   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
-// }
 class NotchedRoundedClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {

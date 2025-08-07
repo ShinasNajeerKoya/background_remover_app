@@ -22,6 +22,9 @@ _HomeState _$HomeStateFromJson(Map<String, dynamic> json) => _HomeState(
   showBackgroundColorPicker:
       json['showBackgroundColorPicker'] as bool? ?? false,
   processingProgress: (json['processingProgress'] as num?)?.toInt() ?? 0,
+  isCompleted: json['isCompleted'] as bool? ?? false,
+  sliderCompleted: json['sliderCompleted'] as bool? ?? false,
+  dragX: (json['dragX'] as num?)?.toDouble() ?? 0.0,
 );
 
 Map<String, dynamic> _$HomeStateToJson(_HomeState instance) =>
@@ -35,4 +38,7 @@ Map<String, dynamic> _$HomeStateToJson(_HomeState instance) =>
       'processedImage': instance.processedImage,
       'showBackgroundColorPicker': instance.showBackgroundColorPicker,
       'processingProgress': instance.processingProgress,
+      'isCompleted': instance.isCompleted,
+      'sliderCompleted': instance.sliderCompleted,
+      'dragX': instance.dragX,
     };

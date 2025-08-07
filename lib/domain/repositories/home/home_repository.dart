@@ -45,4 +45,12 @@ abstract class HomeRepository {
   ///
   /// Returns [bool] true if permission is granted
   Future<bool> requestStoragePermission();
+
+
+  /// To control the sliding function
+  Future<void> completeOnboarding();
+
+
+
+
 }
