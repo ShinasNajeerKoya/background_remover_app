@@ -15,6 +15,8 @@ import 'package:background_remover_app/presentation/feature/home/bloc/home_state
 import 'package:get_it/get_it.dart';
 
 import '../../onboarding/widgets/swipe_to_get_started_widget.dart';
+import '../widgets/notched_image_container.dart';
+import '../widgets/notched_rounded_clipper.dart';
 import '../widgets/swipe_to_get_started_widget.dart';
 
 @RoutePage()
@@ -249,8 +251,8 @@ class _HomePageState extends State<HomePage> {
             }
           },
           builder: (context, state) {
-            final isDataEmpty = state.selectedImage == null;
-
+            final displayImage =
+                state.processedImage != null ? File(state.processedImage!.processedImagePath) : state.selectedImage;
             return SingleChildScrollView(
               child: SizedBox(
                 width: double.infinity,
@@ -261,8 +263,9 @@ class _HomePageState extends State<HomePage> {
                     CustomSvgIcon(AppIcons.kSplashGoldLogo, color: AppColors.kHomeLogoGoldColor, height: 50.h),
                     verticalMargin36,
 
-                    isDataEmpty
-                        ? Container(
+                    displayImage != null
+                        ? NotchedImageContainer(imageFile: displayImage)
+                        : Container(
                           margin: horizontalPadding16,
                           child: ClipPath(
                             clipper: NotchedRoundedClipper(),
@@ -276,7 +279,6 @@ class _HomePageState extends State<HomePage> {
                                   colors: homeGoldenGradient,
                                 ),
                               ),
-                              width: double.infinity,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -292,34 +294,11 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           ),
-                        )
-                        : Container(
-                          margin: horizontalPadding16,
-                          child: Stack(
-                            children: [
-                              CustomPaint(
-                                painter: NotchedBorderPainter(
-                                  fillColor: Colors.black,
-                                  borderColor: AppColors.kPrimaryGoldColor,
-                                  strokeWidth: 1.5,
-                                ),
-                                child: SizedBox(height: 420.h, width: double.infinity),
-                              ),
-                              ClipPath(
-                                clipper: NotchedRoundedClipper(),
-                                child: Image.file(
-                                  state.selectedImage!,
-                                  fit: BoxFit.cover,
-                                  height: 420.h,
-                                  width: double.infinity,
-                                ),
-                              ),
-                            ],
-                          ),
                         ),
 
                     SwipeToGetStartedWidget(homeBloc: homeBloc),
 
+                    /*
                     if (state.isLoading) const CircularProgressIndicator(),
                     if (state.isProcessing) ...[
                       const CircularProgressIndicator(),
@@ -331,50 +310,50 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(height: 10),
                       const Text('Saving image...'),
                     ],
-
-                    const SizedBox(height: 20),
+*/
+                    // const SizedBox(height: 20),
 
                     // Pick Image Buttons
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        ElevatedButton.icon(
-                          onPressed:
-                              (state.isLoading || state.isProcessing || state.isSaving)
-                                  ? null
-                                  : () => homeBloc.pickImageFromGallery(),
-                          icon: const Icon(Icons.photo_library),
-                          label: const Text('Gallery'),
-                        ),
-                        ElevatedButton.icon(
-                          onPressed:
-                              (state.isLoading || state.isProcessing || state.isSaving)
-                                  ? null
-                                  : () => homeBloc.pickImageFromCamera(),
-                          icon: const Icon(Icons.camera_alt),
-                          label: const Text('Camera'),
-                        ),
+                        // ElevatedButton.icon(
+                        //   onPressed:
+                        //       (state.isLoading || state.isProcessing || state.isSaving)
+                        //           ? null
+                        //           : () => homeBloc.pickImageFromGallery(),
+                        //   icon: const Icon(Icons.photo_library),
+                        //   label: const Text('Gallery'),
+                        // ),
+                        // ElevatedButton.icon(
+                        //   onPressed:
+                        //       (state.isLoading || state.isProcessing || state.isSaving)
+                        //           ? null
+                        //           : () => homeBloc.pickImageFromCamera(),
+                        //   icon: const Icon(Icons.camera_alt),
+                        //   label: const Text('Camera'),
+                        // ),
                       ],
                     ),
 
-                    const SizedBox(height: 20),
+                    // const SizedBox(height: 20),
+                    //
+                    // // Remove BG / Save
+                    // if (state.selectedImage != null)
+                    //   ElevatedButton.icon(
+                    //     onPressed: state.isProcessing || state.isSaving ? null : () => homeBloc.removeBackground(),
+                    //     icon: const Icon(Icons.auto_fix_high),
+                    //     label: const Text('Remove Background'),
+                    //   ),
 
-                    // Remove BG / Save
-                    if (state.selectedImage != null)
-                      ElevatedButton.icon(
-                        onPressed: state.isProcessing || state.isSaving ? null : () => homeBloc.removeBackground(),
-                        icon: const Icon(Icons.auto_fix_high),
-                        label: const Text('Remove Background'),
-                      ),
-
-                    if (state.processedImage != null) ...[
-                      const SizedBox(height: 10),
-                      ElevatedButton.icon(
-                        onPressed: state.isSaving ? null : () => homeBloc.saveProcessedImage(),
-                        icon: const Icon(Icons.save),
-                        label: const Text('Save to Gallery'),
-                      ),
-                    ],
+                    // if (state.processedImage != null) ...[
+                    //   const SizedBox(height: 10),
+                    //   ElevatedButton.icon(
+                    //     onPressed: state.isSaving ? null : () => homeBloc.saveProcessedImage(),
+                    //     icon: const Icon(Icons.save),
+                    //     label: const Text('Save to Gallery'),
+                    //   ),
+                    // ],
 
                     const SizedBox(height: 20),
 
@@ -435,87 +414,5 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class NotchedBorderPainter extends CustomPainter {
-  final Color fillColor;
-  final Color borderColor;
-  final double strokeWidth;
 
-  NotchedBorderPainter({required this.fillColor, required this.borderColor, this.strokeWidth = 1});
 
-  @override
-  void paint(Canvas canvas, Size size) {
-    final path = NotchedRoundedClipper().getClip(size);
-
-    // Fill
-    final fillPaint =
-        Paint()
-          ..color = fillColor
-          ..style = PaintingStyle.fill;
-    canvas.drawPath(path, fillPaint);
-
-    // Border
-    final borderPaint =
-        Paint()
-          ..color = borderColor
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = strokeWidth;
-    canvas.drawPath(path, borderPaint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-class NotchedRoundedClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-
-    const double cornerRadius = 24;
-    const double notchHeight = 12;
-    const double notchWidth = 40;
-    const double notchRadius = 30;
-
-    final double leftStart = size.width * 0.38;
-    final double rightEnd = size.width * 0.62;
-
-    // Start with top-left rounded corner
-    path.moveTo(0, cornerRadius);
-    path.quadraticBezierTo(0, 0, cornerRadius, 0);
-
-    // Left straight line
-    path.lineTo(leftStart - notchRadius, 0);
-
-    // Left curve into notch (cubic for smooth S-curve)
-    path.cubicTo(
-      leftStart - notchRadius / 2,
-      0, // control point 1
-      leftStart - notchRadius / 2,
-      notchHeight, // control point 2
-      leftStart,
-      notchHeight, // end point
-    );
-
-    // Horizontal middle of notch
-    path.lineTo(rightEnd, notchHeight);
-
-    // Right curve out of notch (mirror of left)
-    path.cubicTo(rightEnd + notchRadius / 2, notchHeight, rightEnd + notchRadius / 2, 0, rightEnd + notchRadius, 0);
-
-    // Right straight to top-right corner
-    path.lineTo(size.width - cornerRadius, 0);
-    path.quadraticBezierTo(size.width, 0, size.width, cornerRadius);
-
-    // Continue the rounded rectangle
-    path.lineTo(size.width, size.height - cornerRadius);
-    path.quadraticBezierTo(size.width, size.height, size.width - cornerRadius, size.height);
-    path.lineTo(cornerRadius, size.height);
-    path.quadraticBezierTo(0, size.height, 0, size.height - cornerRadius);
-    path.close();
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
-}

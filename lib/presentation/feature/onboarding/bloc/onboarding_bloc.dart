@@ -39,11 +39,11 @@ class OnboardingBloc extends Cubit<OnboardingState> with SafeEmitMixin<Onboardin
     safeEmit(state.copyWith(dragX: x));
   }
 
-  void onSwipeEnd(double maxDrag) {
-    if (!state.sliderCompleted && state.dragX >= maxDrag) {
-      log('slide completed');
-      safeEmit(state.copyWith(sliderCompleted: true));
-      completeOnboardingFlow();
-    }
-  }
+  // void onSwipeEnd(double maxDrag) {
+  //   if (!state.sliderCompleted && state.dragX >= maxDrag) {
+  //     log('slide completed');
+  //     safeEmit(state.copyWith(sliderCompleted: true));
+  //     completeOnboardingFlow();
+  //   }
+  // }
 }

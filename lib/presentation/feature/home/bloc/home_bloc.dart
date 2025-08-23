@@ -31,10 +31,7 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
       final hasPermission = await _repository.hasStoragePermission();
       safeEmit(state.copyWith(hasPermission: hasPermission));
     } catch (e) {
-      safeEmit(state.copyWith(
-        error: true,
-        errorMessage: 'Failed to check permissions: $e',
-      ));
+      safeEmit(state.copyWith(error: true, errorMessage: 'Failed to check permissions: $e'));
     }
   }
 
@@ -42,17 +39,15 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
   Future<void> requestPermission() async {
     try {
       final permissionResult = await AppPermissions.requestMediaWithFeedback();
-      safeEmit(state.copyWith(
-        hasPermission: permissionResult.isGranted,
-        error: !permissionResult.isGranted,
-        errorMessage: permissionResult.isGranted ? '' : permissionResult.message,
-      ));
+      safeEmit(
+        state.copyWith(
+          hasPermission: permissionResult.isGranted,
+          error: !permissionResult.isGranted,
+          errorMessage: permissionResult.isGranted ? '' : permissionResult.message,
+        ),
+      );
     } catch (e) {
-      safeEmit(state.copyWith(
-        hasPermission: false,
-        error: true,
-        errorMessage: 'Failed to request permission: $e',
-      ));
+      safeEmit(state.copyWith(hasPermission: false, error: true, errorMessage: 'Failed to request permission: $e'));
     }
   }
 
@@ -67,11 +62,7 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
         safeEmit(state.copyWith(hasPermission: permissionResult.isGranted));
 
         if (!permissionResult.isGranted) {
-          safeEmit(state.copyWith(
-            isLoading: false,
-            error: true,
-            errorMessage: permissionResult.message,
-          ));
+          safeEmit(state.copyWith(isLoading: false, error: true, errorMessage: permissionResult.message));
           return;
         }
       }
@@ -79,20 +70,18 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
       final File? imageFile = await _repository.pickImageFromGallery();
 
       if (imageFile != null) {
-        safeEmit(state.copyWith(
-          isLoading: false,
-          selectedImage: imageFile,
-          processedImage: null, // Reset processed image
-        ));
+        safeEmit(
+          state.copyWith(
+            isLoading: false,
+            selectedImage: imageFile,
+            processedImage: null, // Reset processed image
+          ),
+        );
       } else {
         safeEmit(state.copyWith(isLoading: false));
       }
     } catch (e) {
-      safeEmit(state.copyWith(
-        isLoading: false,
-        error: true,
-        errorMessage: 'Failed to pick image: $e',
-      ));
+      safeEmit(state.copyWith(isLoading: false, error: true, errorMessage: 'Failed to pick image: $e'));
     }
   }
 
@@ -104,20 +93,18 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
       final File? imageFile = await _repository.pickImageFromCamera();
 
       if (imageFile != null) {
-        safeEmit(state.copyWith(
-          isLoading: false,
-          selectedImage: imageFile,
-          processedImage: null, // Reset processed image
-        ));
+        safeEmit(
+          state.copyWith(
+            isLoading: false,
+            selectedImage: imageFile,
+            processedImage: null, // Reset processed image
+          ),
+        );
       } else {
         safeEmit(state.copyWith(isLoading: false));
       }
     } catch (e) {
-      safeEmit(state.copyWith(
-        isLoading: false,
-        error: true,
-        errorMessage: 'Failed to capture image: $e',
-      ));
+      safeEmit(state.copyWith(isLoading: false, error: true, errorMessage: 'Failed to capture image: $e'));
     }
   }
 
@@ -125,11 +112,7 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
   Future<void> removeBackground({Color? backgroundColor}) async {
     if (state.selectedImage == null) return;
 
-    safeEmit(state.copyWith(
-      isProcessing: true,
-      error: false,
-      processingProgress: 0,
-    ));
+    safeEmit(state.copyWith(isProcessing: true, error: false, processingProgress: 0));
 
     try {
       // Simulate progress updates
@@ -142,23 +125,20 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
 
       safeEmit(state.copyWith(processingProgress: 75));
 
-      safeEmit(state.copyWith(
-        isProcessing: false,
-        processedImage: processedImage,
-        processingProgress: 100,
-      ));
+      safeEmit(state.copyWith(isProcessing: false, processedImage: processedImage, processingProgress: 100));
 
       // Reset progress after a delay
       await Future.delayed(const Duration(seconds: 1));
       safeEmit(state.copyWith(processingProgress: 0));
-
     } catch (e) {
-      safeEmit(state.copyWith(
-        isProcessing: false,
-        error: true,
-        errorMessage: 'Failed to remove background: $e',
-        processingProgress: 0,
-      ));
+      safeEmit(
+        state.copyWith(
+          isProcessing: false,
+          error: true,
+          errorMessage: 'Failed to remove background: $e',
+          processingProgress: 0,
+        ),
+      );
     }
   }
 
@@ -175,34 +155,21 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
         safeEmit(state.copyWith(isSaving: false));
         // You might want to show a success message here
       } else {
-        safeEmit(state.copyWith(
-          isSaving: false,
-          error: true,
-          errorMessage: 'Failed to save image to gallery',
-        ));
+        safeEmit(state.copyWith(isSaving: false, error: true, errorMessage: 'Failed to save image to gallery'));
       }
     } catch (e) {
-      safeEmit(state.copyWith(
-        isSaving: false,
-        error: true,
-        errorMessage: 'Failed to save image: $e',
-      ));
+      safeEmit(state.copyWith(isSaving: false, error: true, errorMessage: 'Failed to save image: $e'));
     }
   }
 
   /// Change background color
   void changeBackgroundColor(Color color) {
-    safeEmit(state.copyWith(
-      selectedBackgroundColor: color,
-      showBackgroundColorPicker: false,
-    ));
+    safeEmit(state.copyWith(selectedBackgroundColor: color, showBackgroundColorPicker: false));
   }
 
   /// Toggle background color picker
   void toggleBackgroundColorPicker() {
-    safeEmit(state.copyWith(
-      showBackgroundColorPicker: !state.showBackgroundColorPicker,
-    ));
+    safeEmit(state.copyWith(showBackgroundColorPicker: !state.showBackgroundColorPicker));
   }
 
   Future<void> completeOnboardingFlow() async {
@@ -214,8 +181,6 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
       safeEmit(state.copyWith(isLoading: false, error: true));
     }
   }
-
-
 
   void completeSlider() {
     // Trigger some action or log
@@ -234,11 +199,24 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
   void onSwipeEnd(double maxDrag) {
     if (!state.sliderCompleted && state.dragX >= maxDrag) {
       log('slide completed');
-      safeEmit(state.copyWith(sliderCompleted: true));
+
+      switch (state.sliderStage) {
+        case SliderStage.pickImage:
+          pickImageFromGallery();
+          break;
+        case SliderStage.removeBackground:
+          removeBackground();
+          break;
+        case SliderStage.saveImage:
+          saveProcessedImage();
+          break;
+      }
+
+      // safeEmit(state.copyWith(sliderCompleted: true));
+      safeEmit(state.copyWith(sliderCompleted: false, dragX: 0));
       completeOnboardingFlow();
     }
   }
-
 
   /// Reset state
   void reset() {
@@ -249,5 +227,19 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
   /// Clear error
   void clearError() {
     safeEmit(state.copyWith(error: false, errorMessage: ''));
+  }
+}
+
+enum SliderStage { pickImage, removeBackground, saveImage }
+
+extension SliderStageHelper on HomeState {
+  SliderStage get sliderStage {
+    if (selectedImage == null) {
+      return SliderStage.pickImage;
+    } else if (processedImage == null) {
+      return SliderStage.removeBackground;
+    } else {
+      return SliderStage.saveImage;
+    }
   }
 }
