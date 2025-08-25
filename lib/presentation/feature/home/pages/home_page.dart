@@ -72,10 +72,8 @@ class _HomePageState extends State<HomePage> {
           },
 
           builder: (context, state) {
-            // final displayImage =
-            //     state.processedImage != null ? File(state.processedImage!.processedImagePath) : state.homeSelectedImage;
-
-            final displayImage = state.homeSelectedImage;
+            final displayImage =
+                state.processedImage != null ? File(state.processedImage!.processedImagePath) : state.homeSelectedImage;
 
             return SizedBox(
               width: double.infinity,
@@ -157,181 +155,257 @@ class _HomePageState extends State<HomePage> {
                   Spacer(),
 
                   // bottom sheet
-                  SwipeToGetStartedWidget(
-                    homeBloc: homeBloc,
-                    title: "Start Editing",
-                    onSlideComplete: () {
-                      AppBottomSheet.showDraggable(
-                        context: context,
-                        initialSize: 0.87,
-                        builder: (context, scrollController, draggableScrollController) {
-                          return SingleChildScrollView(
-                            child: SizedBox(
-                              width: double.maxFinite,
-                              child: Column(
-                                children: [
-                                  InkWell(
-                                    onTap: () => homeBloc.pickImageFromGallery(),
-                                    child: BlocBuilder<HomeBloc, HomeState>(
-                                      bloc: homeBloc,
-                                      builder: (context, state) {
-                                        return DashedBorderContainer(
-                                          height: 423.h,
-                                          width: 350.w,
-                                          margin: EdgeInsets.symmetric(horizontal: 20.w),
-                                          padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
-                                          child:
-                                              state.selectedImage != null
-                                                  ? ClipRRect(
-                                                    borderRadius: BorderRadius.circular(8.r),
-                                                    child: Image.file(state.selectedImage!, fit: BoxFit.cover),
-                                                  )
-                                                  : Column(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    spacing: 8.h,
-                                                    children: [
-                                                      Expanded(
-                                                        child: Center(
-                                                          child: Column(
-                                                            mainAxisSize: MainAxisSize.min,
-                                                            spacing: 8.h,
-                                                            children: [
-                                                              CustomSvgIcon(AppIcons.kGallery),
-                                                              Text(
-                                                                'Select image',
-                                                                style: TextStyle(fontWeight: FontWeight.w600),
+                  displayImage != null
+                      ? SwipeToGetStartedWidget(
+                        homeBloc: homeBloc,
+                        title: "Own This Moment",
+                        onSlideComplete: () {
+                          // AppBottomSheet.showDraggable(
+                          //   context: context,
+                          //   initialSize: 0.87,
+                          //   builder: (context, scrollController, draggableScrollController) {
+                          //     return SingleChildScrollView(
+                          //       child: SizedBox(
+                          //         width: double.maxFinite,
+                          //         child: Column(
+                          //           children: [
+                          //             InkWell(
+                          //               onTap: () => homeBloc.pickImageFromGallery(),
+                          //               child: BlocBuilder<HomeBloc, HomeState>(
+                          //                 bloc: homeBloc,
+                          //                 builder: (context, state) {
+                          //                   return DashedBorderContainer(
+                          //                     height: 423.h,
+                          //                     width: 350.w,
+                          //                     margin: EdgeInsets.symmetric(horizontal: 20.w),
+                          //                     padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
+                          //                     child:
+                          //                         state.selectedImage != null
+                          //                             ? ClipRRect(
+                          //                               borderRadius: BorderRadius.circular(8.r),
+                          //                               child: Image.file(state.selectedImage!, fit: BoxFit.cover),
+                          //                             )
+                          //                             : Column(
+                          //                               mainAxisSize: MainAxisSize.min,
+                          //                               spacing: 8.h,
+                          //                               children: [
+                          //                                 Expanded(
+                          //                                   child: Center(
+                          //                                     child: Column(
+                          //                                       mainAxisSize: MainAxisSize.min,
+                          //                                       spacing: 8.h,
+                          //                                       children: [
+                          //                                         CustomSvgIcon(AppIcons.kGallery),
+                          //                                         Text(
+                          //                                           'Select image',
+                          //                                           style: TextStyle(fontWeight: FontWeight.w600),
+                          //                                         ),
+                          //                                       ],
+                          //                                     ),
+                          //                                   ),
+                          //                                 ),
+                          //
+                          //                                 // Bottom-right logo
+                          //                                 Align(
+                          //                                   alignment: Alignment.bottomRight,
+                          //                                   child: Padding(
+                          //                                     padding: EdgeInsets.only(right: 12.w, bottom: 8.h),
+                          //                                     child: CustomSvgIcon(AppIcons.kLogoBlack, height: 40.h),
+                          //                                   ),
+                          //                                 ),
+                          //                               ],
+                          //                             ),
+                          //                   );
+                          //                 },
+                          //               ),
+                          //             ),
+                          //             verticalMargin36,
+                          //
+                          //             InkWell(
+                          //               onTap: () => homeBloc.cropSelectedImage(),
+                          //               child: Container(
+                          //                 height: 55.h,
+                          //                 width: 150.w,
+                          //                 decoration: BoxDecoration(
+                          //                   color: AppColors.kBlack,
+                          //                   borderRadius: BorderRadius.circular(14.r),
+                          //                 ),
+                          //                 child: Row(
+                          //                   mainAxisAlignment: MainAxisAlignment.center,
+                          //                   spacing: 12.w,
+                          //                   children: [
+                          //                     CustomSvgIcon(AppIcons.kCrop),
+                          //                     Text(
+                          //                       'Crop',
+                          //                       style: TextStyle(
+                          //                         fontSize: 18.sp,
+                          //                         fontWeight: FontWeight.bold,
+                          //                         color: AppColors.kHomeBorderGoldColor,
+                          //                       ),
+                          //                     ),
+                          //                   ],
+                          //                 ),
+                          //               ),
+                          //             ),
+                          //             verticalMargin24,
+                          //
+                          //             InkWell(
+                          //               onTap: () {
+                          //                 homeBloc.saveSelectedImage();
+                          //                 Navigator.pop(context); // Close bottom sheet
+                          //               },
+                          //               child: Container(
+                          //                 height: 55.h,
+                          //                 width: 350.w,
+                          //                 decoration: BoxDecoration(
+                          //                   color: AppColors.kBlack,
+                          //                   borderRadius: BorderRadius.circular(40.r),
+                          //                 ),
+                          //                 alignment: Alignment.center,
+                          //                 child: Text(
+                          //                   'Save',
+                          //                   style: TextStyle(
+                          //                     fontSize: 20.sp,
+                          //                     fontWeight: FontWeight.bold,
+                          //                     color: AppColors.kHomeBorderGoldColor,
+                          //                   ),
+                          //                 ),
+                          //               ),
+                          //             ),
+                          //           ],
+                          //         ),
+                          //       ),
+                          //     );
+                          //   },
+                          // );
+                        },
+                      )
+                      : SwipeToGetStartedWidget(
+                        homeBloc: homeBloc,
+                        title: "Start Editing",
+                        onSlideComplete: () {
+                          AppBottomSheet.showDraggable(
+                            context: context,
+                            initialSize: 0.87,
+                            builder: (context, scrollController, draggableScrollController) {
+                              return SingleChildScrollView(
+                                child: SizedBox(
+                                  width: double.maxFinite,
+                                  child: Column(
+                                    children: [
+                                      InkWell(
+                                        onTap: () => homeBloc.pickImageFromGallery(),
+                                        child: BlocBuilder<HomeBloc, HomeState>(
+                                          bloc: homeBloc,
+                                          builder: (context, state) {
+                                            return DashedBorderContainer(
+                                              height: 423.h,
+                                              width: 350.w,
+                                              margin: EdgeInsets.symmetric(horizontal: 20.w),
+                                              padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
+                                              child:
+                                                  state.selectedImage != null
+                                                      ? ClipRRect(
+                                                        borderRadius: BorderRadius.circular(8.r),
+                                                        child: Image.file(state.selectedImage!, fit: BoxFit.cover),
+                                                      )
+                                                      : Column(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        spacing: 8.h,
+                                                        children: [
+                                                          Expanded(
+                                                            child: Center(
+                                                              child: Column(
+                                                                mainAxisSize: MainAxisSize.min,
+                                                                spacing: 8.h,
+                                                                children: [
+                                                                  CustomSvgIcon(AppIcons.kGallery),
+                                                                  Text(
+                                                                    'Select image',
+                                                                    style: TextStyle(fontWeight: FontWeight.w600),
+                                                                  ),
+                                                                ],
                                                               ),
-                                                            ],
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ),
 
-                                                      // Bottom-right logo
-                                                      Align(
-                                                        alignment: Alignment.bottomRight,
-                                                        child: Padding(
-                                                          padding: EdgeInsets.only(right: 12.w, bottom: 8.h),
-                                                          child: CustomSvgIcon(AppIcons.kLogoBlack, height: 40.h),
-                                                        ),
+                                                          // Bottom-right logo
+                                                          Align(
+                                                            alignment: Alignment.bottomRight,
+                                                            child: Padding(
+                                                              padding: EdgeInsets.only(right: 12.w, bottom: 8.h),
+                                                              child: CustomSvgIcon(AppIcons.kLogoBlack, height: 40.h),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ],
-                                                  ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  verticalMargin36,
-                                  // InkWell(
-                                  //   onTap: () {
-                                  //     Navigator.pop(context);
-                                  //     log("Crop confirmed!");
-                                  //   },
-                                  //   child: Container(
-                                  //     height: 55.h,
-                                  //     width: 150.w,
-                                  //     decoration: BoxDecoration(
-                                  //       color: AppColors.kBlack,
-                                  //       borderRadius: BorderRadius.circular(14.r),
-                                  //     ),
-                                  //     child: Row(
-                                  //       mainAxisAlignment: MainAxisAlignment.center,
-                                  //       spacing: 12.w,
-                                  //       children: [
-                                  //         CustomSvgIcon(AppIcons.kCrop),
-                                  //         Text(
-                                  //           'Crop',
-                                  //           style: TextStyle(
-                                  //             fontSize: 18.sp,
-                                  //             fontWeight: FontWeight.bold,
-                                  //             color: AppColors.kHomeBorderGoldColor,
-                                  //           ),
-                                  //         ),
-                                  //       ],
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  InkWell(
-                                    onTap: () => homeBloc.cropSelectedImage(),
-                                    child: Container(
-                                      height: 55.h,
-                                      width: 150.w,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.kBlack,
-                                        borderRadius: BorderRadius.circular(14.r),
+                                            );
+                                          },
+                                        ),
                                       ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        spacing: 12.w,
-                                        children: [
-                                          CustomSvgIcon(AppIcons.kCrop),
-                                          Text(
-                                            'Crop',
+                                      verticalMargin36,
+
+                                      // crop button
+                                      InkWell(
+                                        onTap: () => homeBloc.cropSelectedImage(),
+                                        child: Container(
+                                          height: 55.h,
+                                          width: 150.w,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.kBlack,
+                                            borderRadius: BorderRadius.circular(14.r),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            spacing: 12.w,
+                                            children: [
+                                              CustomSvgIcon(AppIcons.kCrop),
+                                              Text(
+                                                'Crop',
+                                                style: TextStyle(
+                                                  fontSize: 18.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: AppColors.kHomeBorderGoldColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      verticalMargin24,
+
+                                      // save button
+                                      InkWell(
+                                        onTap: () {
+                                          homeBloc.saveSelectedImage();
+                                          Navigator.pop(context); // Close bottom sheet
+                                        },
+                                        child: Container(
+                                          height: 55.h,
+                                          width: 350.w,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.kBlack,
+                                            borderRadius: BorderRadius.circular(40.r),
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            'Save',
                                             style: TextStyle(
-                                              fontSize: 18.sp,
+                                              fontSize: 20.sp,
                                               fontWeight: FontWeight.bold,
                                               color: AppColors.kHomeBorderGoldColor,
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  verticalMargin24,
-
-                                  // InkWell(
-                                  //   onTap: () {
-                                  //     Navigator.pop(context);
-                                  //     log("Action confirmed!");
-                                  //   },
-                                  //   child: Container(
-                                  //     height: 55.h,
-                                  //     width: 350.w,
-                                  //     decoration: BoxDecoration(
-                                  //       color: AppColors.kBlack,
-                                  //       borderRadius: BorderRadius.circular(40.r),
-                                  //     ),
-                                  //     alignment: Alignment.center,
-                                  //     child: Text(
-                                  //       'Save',
-                                  //       style: TextStyle(
-                                  //         fontSize: 20.sp,
-                                  //         fontWeight: FontWeight.bold,
-                                  //         color: AppColors.kHomeBorderGoldColor,
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  InkWell(
-                                    onTap: () {
-                                      homeBloc.saveSelectedImage();
-                                      Navigator.pop(context); // Close bottom sheet
-                                    },
-                                    child: Container(
-                                      height: 55.h,
-                                      width: 350.w,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.kBlack,
-                                        borderRadius: BorderRadius.circular(40.r),
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        'Save',
-                                        style: TextStyle(
-                                          fontSize: 20.sp,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.kHomeBorderGoldColor,
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
+                                ),
+                              );
+                            },
                           );
                         },
-                      );
-                    },
-                  ),
+                      ),
 
                   /*
                   if (state.isLoading) const CircularProgressIndicator(),

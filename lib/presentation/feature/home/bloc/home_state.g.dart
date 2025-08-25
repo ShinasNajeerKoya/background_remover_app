@@ -13,6 +13,7 @@ _HomeState _$HomeStateFromJson(Map<String, dynamic> json) => _HomeState(
   hasPermission: json['hasPermission'] as bool? ?? false,
   isProcessing: json['isProcessing'] as bool? ?? false,
   isSaving: json['isSaving'] as bool? ?? false,
+  isRemovingBackground: json['isRemovingBackground'] as bool? ?? false,
   processedImage:
       json['processedImage'] == null
           ? null
@@ -35,6 +36,7 @@ Map<String, dynamic> _$HomeStateToJson(_HomeState instance) =>
       'hasPermission': instance.hasPermission,
       'isProcessing': instance.isProcessing,
       'isSaving': instance.isSaving,
+      'isRemovingBackground': instance.isRemovingBackground,
       'processedImage': instance.processedImage,
       'showBackgroundColorPicker': instance.showBackgroundColorPicker,
       'processingProgress': instance.processingProgress,

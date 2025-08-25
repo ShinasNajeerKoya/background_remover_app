@@ -111,10 +111,14 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
   Future<void> removeBackground({Color? backgroundColor}) async {
     if (state.selectedImage == null) return;
 
-    safeEmit(state.copyWith(isProcessing: true, error: false, processingProgress: 0));
+    safeEmit(state.copyWith(
+      isRemovingBackground: true,
+      isProcessing: true,
+      error: false,
+      processingProgress: 0,
+    ));
 
     try {
-      // Simulate progress updates
       safeEmit(state.copyWith(processingProgress: 25));
 
       final processedImage = await _repository.removeBackground(
@@ -124,20 +128,23 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
 
       safeEmit(state.copyWith(processingProgress: 75));
 
-      safeEmit(state.copyWith(isProcessing: false, processedImage: processedImage, processingProgress: 100));
+      safeEmit(state.copyWith(
+        isProcessing: false,
+        isRemovingBackground: false,
+        processedImage: processedImage,
+        processingProgress: 100,
+      ));
 
-      // Reset progress after a delay
       await Future.delayed(const Duration(seconds: 1));
       safeEmit(state.copyWith(processingProgress: 0));
     } catch (e) {
-      safeEmit(
-        state.copyWith(
-          isProcessing: false,
-          error: true,
-          errorMessage: 'Failed to remove background: $e',
-          processingProgress: 0,
-        ),
-      );
+      safeEmit(state.copyWith(
+        isProcessing: false,
+        isRemovingBackground: false,
+        error: true,
+        errorMessage: 'Failed to remove background: $e',
+        processingProgress: 0,
+      ));
     }
   }
 
@@ -188,20 +195,60 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
   }
 
   /// Save selected image into processedImage
-  void saveSelectedImage() {
-    if (state.selectedImage != null) {
-      final file = state.selectedImage!;
+  // void saveSelectedImage() {
+  //   if (state.selectedImage != null) {
+  //     final file = state.selectedImage!;
+  //     final processed = ProcessedImageModel(
+  //       originalImagePath: state.selectedImage?.path ?? file.path,
+  //       processedImagePath: file.path,
+  //       processedAt: DateTime.now(),
+  //       processedFileSize: file.lengthSync(),
+  //       processingDuration: 0,
+  //     );
+  //
+  //     safeEmit(state.copyWith(processedImage: processed, homeSelectedImage: state.selectedImage));
+  //   }
+  // }
+
+  Future<void> saveSelectedImage({Color? backgroundColor}) async {
+    if (state.selectedImage == null) return;
+
+    try {
+      // Step 1: Remove background first
+      await removeBackground(backgroundColor: backgroundColor);
+
+      // Ensure removeBackground succeeded
+      if (state.processedImage == null) {
+        safeEmit(state.copyWith(error: true, errorMessage: "Background removal failed"));
+        return;
+      }
+
+      // Step 2: Start saving
+      safeEmit(state.copyWith(isSaving: true, error: false));
+
       final processed = ProcessedImageModel(
-        originalImagePath: state.selectedImage?.path ?? file.path,
-        processedImagePath: file.path,
+        originalImagePath: state.selectedImage!.path,
+        processedImagePath: state.processedImage!.processedImagePath,
         processedAt: DateTime.now(),
-        processedFileSize: file.lengthSync(),
+        processedFileSize: File(state.processedImage!.processedImagePath).lengthSync(),
         processingDuration: 0,
       );
 
-      safeEmit(state.copyWith(processedImage: processed, homeSelectedImage: state.selectedImage));
+      // Step 3: Finish save
+      safeEmit(state.copyWith(
+        processedImage: processed,
+        homeSelectedImage: state.selectedImage,
+        isSaving: false,
+      ));
+    } catch (e) {
+      safeEmit(state.copyWith(
+        isSaving: false,
+        error: true,
+        errorMessage: "Failed to save image: $e",
+      ));
     }
   }
+
 
   /// Change background color
   void changeBackgroundColor(Color color) {

@@ -18,6 +18,8 @@ abstract class HomeState with _$HomeState {
     @Default(false) bool isProcessing,
     @Default(false) bool isSaving,
 
+    @Default(false) bool isRemovingBackground,
+
     /// Original picked image (raw)
     @JsonKey(includeFromJson: false, includeToJson: false) File? selectedImage,
 
