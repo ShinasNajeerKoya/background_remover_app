@@ -16,6 +16,7 @@ import 'package:background_remover_app/presentation/feature/home/bloc/home_bloc.
 import 'package:background_remover_app/presentation/feature/home/bloc/home_state.dart';
 
 import 'package:get_it/get_it.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../onboarding/widgets/swipe_to_get_started_widget.dart';
 import '../widgets/notched_image_container.dart';
@@ -374,28 +375,67 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       verticalMargin24,
 
-                                      // save button
-                                      InkWell(
-                                        onTap: () {
-                                          homeBloc.saveSelectedImage();
-                                          Navigator.pop(context); // Close bottom sheet
+                                      BlocListener<HomeBloc, HomeState>(
+                                        bloc: homeBloc,
+                                        listenWhen:
+                                            (previous, current) =>
+                                                previous.isSaving != current.isSaving ||
+                                                previous.processedImage != current.processedImage,
+                                        listener: (context, state) {
+                                          // When saving finishes and processedImage is set
+                                          if (!state.isSaving && state.processedImage != null) {
+                                            Navigator.pop(context);
+                                          }
                                         },
-                                        child: Container(
-                                          height: 55.h,
-                                          width: 350.w,
-                                          decoration: BoxDecoration(
-                                            color: AppColors.kBlack,
-                                            borderRadius: BorderRadius.circular(40.r),
-                                          ),
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            'Save',
-                                            style: TextStyle(
-                                              fontSize: 20.sp,
-                                              fontWeight: FontWeight.bold,
-                                              color: AppColors.kHomeBorderGoldColor,
-                                            ),
-                                          ),
+                                        child: BlocSelector<HomeBloc, HomeState, bool>(
+                                          bloc: homeBloc,
+                                          selector: (state) => state.isRemovingBackground,
+                                          builder: (context, isLoading) {
+                                            if (isLoading) {
+                                              return Container(
+                                                height: 55.h,
+                                                width: 350.w,
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.kBlack,
+                                                  borderRadius: BorderRadius.circular(40.r),
+                                                ),
+                                                alignment: Alignment.center,
+                                                child: SizedBox(
+                                                  height: 55.h,
+                                                  width: 55.h,
+                                                  // child: const CircularProgressIndicator.adaptive(
+                                                  //   valueColor: AlwaysStoppedAnimation<Color>(
+                                                  //     AppColors.kHomeBorderGoldColor,
+                                                  //   ),
+                                                  // ),
+                                                  child: Lottie.asset('assets/lottie/loading_cat.json'),
+                                                ),
+                                              );
+                                            }
+
+                                            return InkWell(
+                                              onTap: () {
+                                                homeBloc.saveSelectedImage();
+                                              },
+                                              child: Container(
+                                                height: 55.h,
+                                                width: 350.w,
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.kBlack,
+                                                  borderRadius: BorderRadius.circular(40.r),
+                                                ),
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  'Save',
+                                                  style: TextStyle(
+                                                    fontSize: 20.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: AppColors.kHomeBorderGoldColor,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ),
                                     ],
@@ -459,7 +499,8 @@ class DashedBorderContainer extends StatelessWidget {
           height: height,
           width: width,
           color: Colors.transparent,
-          padding: padding, // inner spacing
+          padding: padding,
+          // inner spacing
           child: child,
         ),
       ),
