@@ -17,8 +17,16 @@ abstract class HomeState with _$HomeState {
     @Default(false) bool hasPermission,
     @Default(false) bool isProcessing,
     @Default(false) bool isSaving,
+
+    /// Original picked image (raw)
     @JsonKey(includeFromJson: false, includeToJson: false) File? selectedImage,
+
+    /// Working image (cropped/edited, but not saved yet)
+    @JsonKey(includeFromJson: false, includeToJson: false) File? homeSelectedImage,
+
+    /// Final processed image (after Save)
     ProcessedImageModel? processedImage,
+
     @JsonKey(includeFromJson: false, includeToJson: false) Color? selectedBackgroundColor,
     @Default(false) bool showBackgroundColorPicker,
     @Default(0) int processingProgress,
@@ -28,10 +36,8 @@ abstract class HomeState with _$HomeState {
     @Default(0.0) double dragX,
   }) = _HomeState;
 
-  factory HomeState.fromJson(Map<String, dynamic> json) =>
-      _$HomeStateFromJson(json);
+  factory HomeState.fromJson(Map<String, dynamic> json) => _$HomeStateFromJson(json);
 }
-
 
 extension HomeStateX on HomeState {
   /// Check if an image is selected

@@ -34,6 +34,11 @@ final List<Color> lightColors = [
 ];
 
 final List<Color> homeGoldenGradient = [
-  Color(0xFFF3D496), // light yellow
-  Color(0xFFC9A968), // light purple
+  Color(0xFFF3D496),
+  Color(0xFFC9A968),
+];
+
+final List<Color> sliderButtonBackgroundGradient = [
+  Color(0xFFC9A968),
+  Color(0xFFF3D496),
 ];

@@ -45,6 +45,7 @@ dependencies:
   image_background_remover: ^1.0.0
   image_gallery_saver: ^2.0.3
   photo_manager: ^3.7.1
+  image_cropper: ^9.1.0
 
 
 

@@ -3,20 +3,17 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 import '../../../../core/app_permissions.dart';
+import '../../../../domain/models/processed_image/processed_image_model.dart';
 import '../../../../shared/mixins/safe_emit_mixin/safe_emit_mixin.dart';
 import 'home_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:background_remover_app/domain/repositories/home/home_repository.dart';
 
-// class HomeBloc extends Cubit<HomeState> {
-//   HomeBloc(this._repo) : super(const HomeState());
-//
-//   final HomeRepository _repo;
-//
-//   /// Add your business logic here
-// }
+enum SliderStage { pickImage, removeBackground, saveImage }
 
 class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
   final HomeRepository _repository;
@@ -74,6 +71,7 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
           state.copyWith(
             isLoading: false,
             selectedImage: imageFile,
+            // homeSelectedImage: imageFile,
             processedImage: null, // Reset processed image
           ),
         );
@@ -97,6 +95,7 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
           state.copyWith(
             isLoading: false,
             selectedImage: imageFile,
+            homeSelectedImage: imageFile, // working copy
             processedImage: null, // Reset processed image
           ),
         );
@@ -162,6 +161,48 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
     }
   }
 
+  /// Crop selected image
+  Future<void> cropSelectedImage() async {
+    if (state.selectedImage == null) return;
+    try {
+      final croppedFile = await ImageCropper().cropImage(
+        sourcePath: state.selectedImage!.path,
+        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1), // optional
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: 'Crop Image',
+            toolbarColor: Colors.black,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false,
+          ),
+          IOSUiSettings(title: 'Crop Image'),
+        ],
+      );
+      if (croppedFile != null) {
+        safeEmit(state.copyWith(selectedImage: File(croppedFile.path)));
+      }
+    } catch (e) {
+      safeEmit(state.copyWith(error: true, errorMessage: 'Failed to crop image: $e'));
+    }
+  }
+
+  /// Save selected image into processedImage
+  void saveSelectedImage() {
+    if (state.selectedImage != null) {
+      final file = state.selectedImage!;
+      final processed = ProcessedImageModel(
+        originalImagePath: state.selectedImage?.path ?? file.path,
+        processedImagePath: file.path,
+        processedAt: DateTime.now(),
+        processedFileSize: file.lengthSync(),
+        processingDuration: 0,
+      );
+
+      safeEmit(state.copyWith(processedImage: processed, homeSelectedImage: state.selectedImage));
+    }
+  }
+
   /// Change background color
   void changeBackgroundColor(Color color) {
     safeEmit(state.copyWith(selectedBackgroundColor: color, showBackgroundColorPicker: false));
@@ -169,7 +210,7 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
 
   /// Toggle background color picker
   void toggleBackgroundColorPicker() {
-    safeEmit(state.copyWith(showBackgroundColorPicker: !state.showBackgroundColorPicker));
+    safeEmit(state.copyWith(showBackgroundColorPicker: true));
   }
 
   Future<void> completeOnboardingFlow() async {
@@ -198,19 +239,19 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
 
   void onSwipeEnd(double maxDrag) {
     if (!state.sliderCompleted && state.dragX >= maxDrag) {
-      log('slide completed');
+      // log('slide completed');
 
-      switch (state.sliderStage) {
-        case SliderStage.pickImage:
-          pickImageFromGallery();
-          break;
-        case SliderStage.removeBackground:
-          removeBackground();
-          break;
-        case SliderStage.saveImage:
-          saveProcessedImage();
-          break;
-      }
+      // switch (state.sliderStage) {
+      //   case SliderStage.pickImage:
+      //     pickImageFromGallery();
+      //     break;
+      //   case SliderStage.removeBackground:
+      //     removeBackground();
+      //     break;
+      //   case SliderStage.saveImage:
+      //     saveProcessedImage();
+      //     break;
+      // }
 
       // safeEmit(state.copyWith(sliderCompleted: true));
       safeEmit(state.copyWith(sliderCompleted: false, dragX: 0));
@@ -229,8 +270,6 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
     safeEmit(state.copyWith(error: false, errorMessage: ''));
   }
 }
-
-enum SliderStage { pickImage, removeBackground, saveImage }
 
 extension SliderStageHelper on HomeState {
   SliderStage get sliderStage {

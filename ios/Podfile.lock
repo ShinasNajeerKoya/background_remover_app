@@ -5,6 +5,9 @@ PODS:
   - gal (1.0.0):
     - Flutter
     - FlutterMacOS
+  - image_cropper (0.0.4):
+    - Flutter
+    - TOCropViewController (~> 2.7.4)
   - image_gallery_saver (2.0.2):
     - Flutter
   - image_picker_ios (0.0.1):
@@ -25,6 +28,7 @@ PODS:
   - photo_manager (3.7.1):
     - Flutter
     - FlutterMacOS
+  - TOCropViewController (2.7.4)
   - vibration (3.0.0):
     - Flutter
 
@@ -32,6 +36,7 @@ DEPENDENCIES:
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Flutter (from `Flutter`)
   - gal (from `.symlinks/plugins/gal/darwin`)
+  - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
   - image_gallery_saver (from `.symlinks/plugins/image_gallery_saver/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - onnxruntime (from `.symlinks/plugins/onnxruntime/ios`)
@@ -44,6 +49,7 @@ SPEC REPOS:
   trunk:
     - onnxruntime-c
     - onnxruntime-objc
+    - TOCropViewController
 
 EXTERNAL SOURCES:
   device_info_plus:
@@ -52,6 +58,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   gal:
     :path: ".symlinks/plugins/gal/darwin"
+  image_cropper:
+    :path: ".symlinks/plugins/image_cropper/ios"
   image_gallery_saver:
     :path: ".symlinks/plugins/image_gallery_saver/ios"
   image_picker_ios:
@@ -71,6 +79,7 @@ SPEC CHECKSUMS:
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   gal: baecd024ebfd13c441269ca7404792a7152fde89
+  image_cropper: c4326ea50132b1e1564499e5d32a84f01fb03537
   image_gallery_saver: 14711d79da40581063e8842a11acf1969d781ed7
   image_picker_ios: 7fe1ff8e34c1790d6fff70a32484959f563a928a
   onnxruntime: 2ab1957eb029c71d47f7bb35cc4efc9f0d297828
@@ -79,6 +88,7 @@ SPEC CHECKSUMS:
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   photo_manager: 1d80ae07a89a67dfbcae95953a1e5a24af7c3e62
+  TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
   vibration: 69774ad57825b11c951ee4c46155f455d7a592ce
 
 PODFILE CHECKSUM: 4305caec6b40dde0ae97be1573c53de1882a07e5
