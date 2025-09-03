@@ -20,6 +20,12 @@ _HomeState _$HomeStateFromJson(Map<String, dynamic> json) => _HomeState(
           : ProcessedImageModel.fromJson(
             json['processedImage'] as Map<String, dynamic>,
           ),
+  selectedBackgroundColor:
+      $enumDecodeNullable(
+        _$BackgroundColorOptionEnumMap,
+        json['selectedBackgroundColor'],
+      ) ??
+      BackgroundColorOption.black,
   showBackgroundColorPicker:
       json['showBackgroundColorPicker'] as bool? ?? false,
   processingProgress: (json['processingProgress'] as num?)?.toInt() ?? 0,
@@ -38,9 +44,21 @@ Map<String, dynamic> _$HomeStateToJson(_HomeState instance) =>
       'isSaving': instance.isSaving,
       'isRemovingBackground': instance.isRemovingBackground,
       'processedImage': instance.processedImage,
+      'selectedBackgroundColor':
+          _$BackgroundColorOptionEnumMap[instance.selectedBackgroundColor]!,
       'showBackgroundColorPicker': instance.showBackgroundColorPicker,
       'processingProgress': instance.processingProgress,
       'isCompleted': instance.isCompleted,
       'sliderCompleted': instance.sliderCompleted,
       'dragX': instance.dragX,
     };
+
+const _$BackgroundColorOptionEnumMap = {
+  BackgroundColorOption.black: 'black',
+  BackgroundColorOption.red: 'red',
+  BackgroundColorOption.green: 'green',
+  BackgroundColorOption.blue: 'blue',
+  BackgroundColorOption.yellow: 'yellow',
+  BackgroundColorOption.purple: 'purple',
+  BackgroundColorOption.transparent: 'transparent',
+};

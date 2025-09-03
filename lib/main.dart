@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/di/dependency_injection.dart';
 import 'core/routes/route_config.dart';
@@ -10,6 +11,12 @@ import 'data/services/background_removal_service/background_removal_service.dart
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Supabase.initialize(
+    url: 'https://mttdjlexusmntcjlwvwz.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10dGRqbGV4dXNtbnRjamx3dnd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MDMxOTMsImV4cCI6MjA2OTM3OTE5M30.VG9GrazeiUfQPH0Z3efpsl4573lKtDQD-vim_fmZFj4',
+  );
 
   // Initialize background removal service
   await BackgroundRemovalService.initialize();
@@ -99,7 +106,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp.router(
-          title: 'Ostrum Tech',
+          title: 'Background Remove',
           theme: ThemeData(
             textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme).apply(fontSizeFactor: 1.sp),
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

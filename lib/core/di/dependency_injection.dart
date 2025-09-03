@@ -2,6 +2,7 @@
 
 import 'package:background_remover_app/data/repositories/home/home_repository_impl.dart';
 import 'package:background_remover_app/domain/repositories/home/home_repository.dart';
+import 'package:background_remover_app/image_getter_files/bloc/image_getter_bloc.dart';
 import 'package:background_remover_app/presentation/feature/home/bloc/home_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
@@ -12,7 +13,6 @@ import 'package:background_remover_app/presentation/feature/onboarding/bloc/onbo
 
 import '../../data/repositories/ostrum_comments/ostrum_comments_repository_impl.dart';
 import '../../data/services/comment_service/comment_service.dart';
-import '../../presentation/feature/ostrum_comments/bloc/ostrum_comments_bloc.dart';
 import '../network/api_client.dart';
 import '../routes/route_config.dart';
 
@@ -39,8 +39,8 @@ class GetItHelper {
 
     /// BloCs -- add after each feature generation
     getIt.registerSingleton<OnboardingBloc>(OnboardingBloc(getIt<OnboardingRepository>()));
-    getIt.registerSingleton<OstrumCommentsBloc>(OstrumCommentsBloc(getIt<OstrumCommentsRepository>()));
     getIt.registerSingleton<HomeBloc>(HomeBloc(getIt<HomeRepository>()));
+    getIt.registerSingleton<ImageBloc>(ImageBloc());
   }
 
   void dispose() {

@@ -9,6 +9,7 @@ import 'package:image_cropper/image_cropper.dart';
 import '../../../../core/app_permissions.dart';
 import '../../../../domain/models/processed_image/processed_image_model.dart';
 import '../../../../shared/mixins/safe_emit_mixin/safe_emit_mixin.dart';
+import '../utils/background_color_enum.dart';
 import 'home_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:background_remover_app/domain/repositories/home/home_repository.dart';
@@ -21,6 +22,8 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
   HomeBloc(this._repository) : super(const HomeState()) {
     checkInitialPermission();
   }
+
+  /// to handle the background color of the image
 
   /// Check permission status on initialization
   Future<void> checkInitialPermission() async {
@@ -111,45 +114,44 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
   Future<void> removeBackground({Color? backgroundColor}) async {
     if (state.selectedImage == null) return;
 
-    safeEmit(state.copyWith(
-      isRemovingBackground: true,
-      isProcessing: true,
-      error: false,
-      processingProgress: 0,
-    ));
+    safeEmit(state.copyWith(isRemovingBackground: true, isProcessing: true, error: false, processingProgress: 0));
 
     try {
       safeEmit(state.copyWith(processingProgress: 25));
 
       final processedImage = await _repository.removeBackground(
         state.selectedImage!,
-        backgroundColor: backgroundColor ?? state.selectedBackgroundColor,
+        backgroundColor: backgroundColor ?? state.selectedBackgroundColor.color,
       );
 
       safeEmit(state.copyWith(processingProgress: 75));
 
-      safeEmit(state.copyWith(
-        isProcessing: false,
-        isRemovingBackground: false,
-        processedImage: processedImage,
-        processingProgress: 100,
-      ));
+      safeEmit(
+        state.copyWith(
+          isProcessing: false,
+          isRemovingBackground: false,
+          processedImage: processedImage,
+          processingProgress: 100,
+        ),
+      );
 
       await Future.delayed(const Duration(seconds: 1));
       safeEmit(state.copyWith(processingProgress: 0));
     } catch (e) {
-      safeEmit(state.copyWith(
-        isProcessing: false,
-        isRemovingBackground: false,
-        error: true,
-        errorMessage: 'Failed to remove background: $e',
-        processingProgress: 0,
-      ));
+      safeEmit(
+        state.copyWith(
+          isProcessing: false,
+          isRemovingBackground: false,
+          error: true,
+          errorMessage: 'Failed to remove background: $e',
+          processingProgress: 0,
+        ),
+      );
     }
   }
 
   /// Save processed image to gallery
-  Future<void> saveProcessedImage() async {
+  Future<void> saveProcessedImageToGallery() async {
     if (state.processedImage == null) return;
 
     safeEmit(state.copyWith(isSaving: true, error: false));
@@ -169,29 +171,35 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
   }
 
   /// Crop selected image
-  Future<void> cropSelectedImage() async {
-    if (state.selectedImage == null) return;
-    try {
-      final croppedFile = await ImageCropper().cropImage(
-        sourcePath: state.selectedImage!.path,
-        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1), // optional
-        uiSettings: [
-          AndroidUiSettings(
-            toolbarTitle: 'Crop Image',
-            toolbarColor: Colors.black,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false,
-          ),
-          IOSUiSettings(title: 'Crop Image'),
-        ],
-      );
-      if (croppedFile != null) {
-        safeEmit(state.copyWith(selectedImage: File(croppedFile.path)));
-      }
-    } catch (e) {
-      safeEmit(state.copyWith(error: true, errorMessage: 'Failed to crop image: $e'));
-    }
+  // Future<void> cropSelectedImage() async {
+  //   if (state.selectedImage == null) return;
+  //   try {
+  //     final croppedFile = await ImageCropper().cropImage(
+  //       sourcePath: state.selectedImage!.path,
+  //       aspectRatio: const CropAspectRatio(ratioX: 2, ratioY: 2), // optional
+  //       uiSettings: [
+  //         AndroidUiSettings(
+  //           toolbarTitle: 'Crop Image',
+  //           toolbarColor: Colors.white,
+  //           toolbarWidgetColor: Colors.white,
+  //           initAspectRatio: CropAspectRatioPreset.original,
+  //           lockAspectRatio: false,
+  //
+  //           hideBottomControls: false,
+  //         ),
+  //         IOSUiSettings(title: 'Crop Image'),
+  //       ],
+  //     );
+  //     if (croppedFile != null) {
+  //       safeEmit(state.copyWith(selectedImage: File(croppedFile.path)));
+  //     }
+  //   } catch (e) {
+  //     safeEmit(state.copyWith(error: true, errorMessage: 'Failed to crop image: $e'));
+  //   }
+  // }
+
+  void updateCroppedImage(File file) {
+    safeEmit(state.copyWith(selectedImage: file));
   }
 
   /// Save selected image into processedImage
@@ -235,23 +243,14 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
       );
 
       // Step 3: Finish save
-      safeEmit(state.copyWith(
-        processedImage: processed,
-        homeSelectedImage: state.selectedImage,
-        isSaving: false,
-      ));
+      safeEmit(state.copyWith(processedImage: processed, homeSelectedImage: state.selectedImage, isSaving: false));
     } catch (e) {
-      safeEmit(state.copyWith(
-        isSaving: false,
-        error: true,
-        errorMessage: "Failed to save image: $e",
-      ));
+      safeEmit(state.copyWith(isSaving: false, error: true, errorMessage: "Failed to save image: $e"));
     }
   }
 
-
   /// Change background color
-  void changeBackgroundColor(Color color) {
+  void changeBackgroundColor(BackgroundColorOption color) {
     safeEmit(state.copyWith(selectedBackgroundColor: color, showBackgroundColorPicker: false));
   }
 

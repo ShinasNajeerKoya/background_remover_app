@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../domain/models/processed_image/processed_image_model.dart';
+import '../utils/background_color_enum.dart';
 
 part 'home_state.freezed.dart';
 part 'home_state.g.dart';
@@ -20,6 +22,7 @@ abstract class HomeState with _$HomeState {
 
     @Default(false) bool isRemovingBackground,
 
+
     /// Original picked image (raw)
     @JsonKey(includeFromJson: false, includeToJson: false) File? selectedImage,
 
@@ -29,7 +32,7 @@ abstract class HomeState with _$HomeState {
     /// Final processed image (after Save)
     ProcessedImageModel? processedImage,
 
-    @JsonKey(includeFromJson: false, includeToJson: false) Color? selectedBackgroundColor,
+    @Default(BackgroundColorOption.black) BackgroundColorOption  selectedBackgroundColor,
     @Default(false) bool showBackgroundColorPicker,
     @Default(0) int processingProgress,
 

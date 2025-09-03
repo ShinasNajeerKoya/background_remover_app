@@ -18,7 +18,7 @@ mixin _$HomeState {
  bool get isLoading; bool get error; String get errorMessage; bool get hasPermission; bool get isProcessing; bool get isSaving; bool get isRemovingBackground;/// Original picked image (raw)
 @JsonKey(includeFromJson: false, includeToJson: false) File? get selectedImage;/// Working image (cropped/edited, but not saved yet)
 @JsonKey(includeFromJson: false, includeToJson: false) File? get homeSelectedImage;/// Final processed image (after Save)
- ProcessedImageModel? get processedImage;@JsonKey(includeFromJson: false, includeToJson: false) Color? get selectedBackgroundColor; bool get showBackgroundColorPicker; int get processingProgress; bool get isCompleted; bool get sliderCompleted; double get dragX;
+ ProcessedImageModel? get processedImage; BackgroundColorOption get selectedBackgroundColor; bool get showBackgroundColorPicker; int get processingProgress; bool get isCompleted; bool get sliderCompleted; double get dragX;
 /// Create a copy of HomeState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -51,7 +51,7 @@ abstract mixin class $HomeStateCopyWith<$Res>  {
   factory $HomeStateCopyWith(HomeState value, $Res Function(HomeState) _then) = _$HomeStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, bool error, String errorMessage, bool hasPermission, bool isProcessing, bool isSaving, bool isRemovingBackground,@JsonKey(includeFromJson: false, includeToJson: false) File? selectedImage,@JsonKey(includeFromJson: false, includeToJson: false) File? homeSelectedImage, ProcessedImageModel? processedImage,@JsonKey(includeFromJson: false, includeToJson: false) Color? selectedBackgroundColor, bool showBackgroundColorPicker, int processingProgress, bool isCompleted, bool sliderCompleted, double dragX
+ bool isLoading, bool error, String errorMessage, bool hasPermission, bool isProcessing, bool isSaving, bool isRemovingBackground,@JsonKey(includeFromJson: false, includeToJson: false) File? selectedImage,@JsonKey(includeFromJson: false, includeToJson: false) File? homeSelectedImage, ProcessedImageModel? processedImage, BackgroundColorOption selectedBackgroundColor, bool showBackgroundColorPicker, int processingProgress, bool isCompleted, bool sliderCompleted, double dragX
 });
 
 
@@ -68,7 +68,7 @@ class _$HomeStateCopyWithImpl<$Res>
 
 /// Create a copy of HomeState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? error = null,Object? errorMessage = null,Object? hasPermission = null,Object? isProcessing = null,Object? isSaving = null,Object? isRemovingBackground = null,Object? selectedImage = freezed,Object? homeSelectedImage = freezed,Object? processedImage = freezed,Object? selectedBackgroundColor = freezed,Object? showBackgroundColorPicker = null,Object? processingProgress = null,Object? isCompleted = null,Object? sliderCompleted = null,Object? dragX = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? error = null,Object? errorMessage = null,Object? hasPermission = null,Object? isProcessing = null,Object? isSaving = null,Object? isRemovingBackground = null,Object? selectedImage = freezed,Object? homeSelectedImage = freezed,Object? processedImage = freezed,Object? selectedBackgroundColor = null,Object? showBackgroundColorPicker = null,Object? processingProgress = null,Object? isCompleted = null,Object? sliderCompleted = null,Object? dragX = null,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,error: null == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
@@ -80,8 +80,8 @@ as bool,isRemovingBackground: null == isRemovingBackground ? _self.isRemovingBac
 as bool,selectedImage: freezed == selectedImage ? _self.selectedImage : selectedImage // ignore: cast_nullable_to_non_nullable
 as File?,homeSelectedImage: freezed == homeSelectedImage ? _self.homeSelectedImage : homeSelectedImage // ignore: cast_nullable_to_non_nullable
 as File?,processedImage: freezed == processedImage ? _self.processedImage : processedImage // ignore: cast_nullable_to_non_nullable
-as ProcessedImageModel?,selectedBackgroundColor: freezed == selectedBackgroundColor ? _self.selectedBackgroundColor : selectedBackgroundColor // ignore: cast_nullable_to_non_nullable
-as Color?,showBackgroundColorPicker: null == showBackgroundColorPicker ? _self.showBackgroundColorPicker : showBackgroundColorPicker // ignore: cast_nullable_to_non_nullable
+as ProcessedImageModel?,selectedBackgroundColor: null == selectedBackgroundColor ? _self.selectedBackgroundColor : selectedBackgroundColor // ignore: cast_nullable_to_non_nullable
+as BackgroundColorOption,showBackgroundColorPicker: null == showBackgroundColorPicker ? _self.showBackgroundColorPicker : showBackgroundColorPicker // ignore: cast_nullable_to_non_nullable
 as bool,processingProgress: null == processingProgress ? _self.processingProgress : processingProgress // ignore: cast_nullable_to_non_nullable
 as int,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
 as bool,sliderCompleted: null == sliderCompleted ? _self.sliderCompleted : sliderCompleted // ignore: cast_nullable_to_non_nullable
@@ -183,7 +183,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  bool error,  String errorMessage,  bool hasPermission,  bool isProcessing,  bool isSaving,  bool isRemovingBackground, @JsonKey(includeFromJson: false, includeToJson: false)  File? selectedImage, @JsonKey(includeFromJson: false, includeToJson: false)  File? homeSelectedImage,  ProcessedImageModel? processedImage, @JsonKey(includeFromJson: false, includeToJson: false)  Color? selectedBackgroundColor,  bool showBackgroundColorPicker,  int processingProgress,  bool isCompleted,  bool sliderCompleted,  double dragX)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  bool error,  String errorMessage,  bool hasPermission,  bool isProcessing,  bool isSaving,  bool isRemovingBackground, @JsonKey(includeFromJson: false, includeToJson: false)  File? selectedImage, @JsonKey(includeFromJson: false, includeToJson: false)  File? homeSelectedImage,  ProcessedImageModel? processedImage,  BackgroundColorOption selectedBackgroundColor,  bool showBackgroundColorPicker,  int processingProgress,  bool isCompleted,  bool sliderCompleted,  double dragX)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HomeState() when $default != null:
 return $default(_that.isLoading,_that.error,_that.errorMessage,_that.hasPermission,_that.isProcessing,_that.isSaving,_that.isRemovingBackground,_that.selectedImage,_that.homeSelectedImage,_that.processedImage,_that.selectedBackgroundColor,_that.showBackgroundColorPicker,_that.processingProgress,_that.isCompleted,_that.sliderCompleted,_that.dragX);case _:
@@ -204,7 +204,7 @@ return $default(_that.isLoading,_that.error,_that.errorMessage,_that.hasPermissi
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  bool error,  String errorMessage,  bool hasPermission,  bool isProcessing,  bool isSaving,  bool isRemovingBackground, @JsonKey(includeFromJson: false, includeToJson: false)  File? selectedImage, @JsonKey(includeFromJson: false, includeToJson: false)  File? homeSelectedImage,  ProcessedImageModel? processedImage, @JsonKey(includeFromJson: false, includeToJson: false)  Color? selectedBackgroundColor,  bool showBackgroundColorPicker,  int processingProgress,  bool isCompleted,  bool sliderCompleted,  double dragX)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  bool error,  String errorMessage,  bool hasPermission,  bool isProcessing,  bool isSaving,  bool isRemovingBackground, @JsonKey(includeFromJson: false, includeToJson: false)  File? selectedImage, @JsonKey(includeFromJson: false, includeToJson: false)  File? homeSelectedImage,  ProcessedImageModel? processedImage,  BackgroundColorOption selectedBackgroundColor,  bool showBackgroundColorPicker,  int processingProgress,  bool isCompleted,  bool sliderCompleted,  double dragX)  $default,) {final _that = this;
 switch (_that) {
 case _HomeState():
 return $default(_that.isLoading,_that.error,_that.errorMessage,_that.hasPermission,_that.isProcessing,_that.isSaving,_that.isRemovingBackground,_that.selectedImage,_that.homeSelectedImage,_that.processedImage,_that.selectedBackgroundColor,_that.showBackgroundColorPicker,_that.processingProgress,_that.isCompleted,_that.sliderCompleted,_that.dragX);case _:
@@ -224,7 +224,7 @@ return $default(_that.isLoading,_that.error,_that.errorMessage,_that.hasPermissi
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  bool error,  String errorMessage,  bool hasPermission,  bool isProcessing,  bool isSaving,  bool isRemovingBackground, @JsonKey(includeFromJson: false, includeToJson: false)  File? selectedImage, @JsonKey(includeFromJson: false, includeToJson: false)  File? homeSelectedImage,  ProcessedImageModel? processedImage, @JsonKey(includeFromJson: false, includeToJson: false)  Color? selectedBackgroundColor,  bool showBackgroundColorPicker,  int processingProgress,  bool isCompleted,  bool sliderCompleted,  double dragX)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  bool error,  String errorMessage,  bool hasPermission,  bool isProcessing,  bool isSaving,  bool isRemovingBackground, @JsonKey(includeFromJson: false, includeToJson: false)  File? selectedImage, @JsonKey(includeFromJson: false, includeToJson: false)  File? homeSelectedImage,  ProcessedImageModel? processedImage,  BackgroundColorOption selectedBackgroundColor,  bool showBackgroundColorPicker,  int processingProgress,  bool isCompleted,  bool sliderCompleted,  double dragX)?  $default,) {final _that = this;
 switch (_that) {
 case _HomeState() when $default != null:
 return $default(_that.isLoading,_that.error,_that.errorMessage,_that.hasPermission,_that.isProcessing,_that.isSaving,_that.isRemovingBackground,_that.selectedImage,_that.homeSelectedImage,_that.processedImage,_that.selectedBackgroundColor,_that.showBackgroundColorPicker,_that.processingProgress,_that.isCompleted,_that.sliderCompleted,_that.dragX);case _:
@@ -239,7 +239,7 @@ return $default(_that.isLoading,_that.error,_that.errorMessage,_that.hasPermissi
 @JsonSerializable()
 
 class _HomeState implements HomeState {
-  const _HomeState({this.isLoading = false, this.error = false, this.errorMessage = '', this.hasPermission = false, this.isProcessing = false, this.isSaving = false, this.isRemovingBackground = false, @JsonKey(includeFromJson: false, includeToJson: false) this.selectedImage, @JsonKey(includeFromJson: false, includeToJson: false) this.homeSelectedImage, this.processedImage, @JsonKey(includeFromJson: false, includeToJson: false) this.selectedBackgroundColor, this.showBackgroundColorPicker = false, this.processingProgress = 0, this.isCompleted = false, this.sliderCompleted = false, this.dragX = 0.0});
+  const _HomeState({this.isLoading = false, this.error = false, this.errorMessage = '', this.hasPermission = false, this.isProcessing = false, this.isSaving = false, this.isRemovingBackground = false, @JsonKey(includeFromJson: false, includeToJson: false) this.selectedImage, @JsonKey(includeFromJson: false, includeToJson: false) this.homeSelectedImage, this.processedImage, this.selectedBackgroundColor = BackgroundColorOption.black, this.showBackgroundColorPicker = false, this.processingProgress = 0, this.isCompleted = false, this.sliderCompleted = false, this.dragX = 0.0});
   factory _HomeState.fromJson(Map<String, dynamic> json) => _$HomeStateFromJson(json);
 
 @override@JsonKey() final  bool isLoading;
@@ -255,7 +255,7 @@ class _HomeState implements HomeState {
 @override@JsonKey(includeFromJson: false, includeToJson: false) final  File? homeSelectedImage;
 /// Final processed image (after Save)
 @override final  ProcessedImageModel? processedImage;
-@override@JsonKey(includeFromJson: false, includeToJson: false) final  Color? selectedBackgroundColor;
+@override@JsonKey() final  BackgroundColorOption selectedBackgroundColor;
 @override@JsonKey() final  bool showBackgroundColorPicker;
 @override@JsonKey() final  int processingProgress;
 @override@JsonKey() final  bool isCompleted;
@@ -295,7 +295,7 @@ abstract mixin class _$HomeStateCopyWith<$Res> implements $HomeStateCopyWith<$Re
   factory _$HomeStateCopyWith(_HomeState value, $Res Function(_HomeState) _then) = __$HomeStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, bool error, String errorMessage, bool hasPermission, bool isProcessing, bool isSaving, bool isRemovingBackground,@JsonKey(includeFromJson: false, includeToJson: false) File? selectedImage,@JsonKey(includeFromJson: false, includeToJson: false) File? homeSelectedImage, ProcessedImageModel? processedImage,@JsonKey(includeFromJson: false, includeToJson: false) Color? selectedBackgroundColor, bool showBackgroundColorPicker, int processingProgress, bool isCompleted, bool sliderCompleted, double dragX
+ bool isLoading, bool error, String errorMessage, bool hasPermission, bool isProcessing, bool isSaving, bool isRemovingBackground,@JsonKey(includeFromJson: false, includeToJson: false) File? selectedImage,@JsonKey(includeFromJson: false, includeToJson: false) File? homeSelectedImage, ProcessedImageModel? processedImage, BackgroundColorOption selectedBackgroundColor, bool showBackgroundColorPicker, int processingProgress, bool isCompleted, bool sliderCompleted, double dragX
 });
 
 
@@ -312,7 +312,7 @@ class __$HomeStateCopyWithImpl<$Res>
 
 /// Create a copy of HomeState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? error = null,Object? errorMessage = null,Object? hasPermission = null,Object? isProcessing = null,Object? isSaving = null,Object? isRemovingBackground = null,Object? selectedImage = freezed,Object? homeSelectedImage = freezed,Object? processedImage = freezed,Object? selectedBackgroundColor = freezed,Object? showBackgroundColorPicker = null,Object? processingProgress = null,Object? isCompleted = null,Object? sliderCompleted = null,Object? dragX = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? error = null,Object? errorMessage = null,Object? hasPermission = null,Object? isProcessing = null,Object? isSaving = null,Object? isRemovingBackground = null,Object? selectedImage = freezed,Object? homeSelectedImage = freezed,Object? processedImage = freezed,Object? selectedBackgroundColor = null,Object? showBackgroundColorPicker = null,Object? processingProgress = null,Object? isCompleted = null,Object? sliderCompleted = null,Object? dragX = null,}) {
   return _then(_HomeState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,error: null == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
@@ -324,8 +324,8 @@ as bool,isRemovingBackground: null == isRemovingBackground ? _self.isRemovingBac
 as bool,selectedImage: freezed == selectedImage ? _self.selectedImage : selectedImage // ignore: cast_nullable_to_non_nullable
 as File?,homeSelectedImage: freezed == homeSelectedImage ? _self.homeSelectedImage : homeSelectedImage // ignore: cast_nullable_to_non_nullable
 as File?,processedImage: freezed == processedImage ? _self.processedImage : processedImage // ignore: cast_nullable_to_non_nullable
-as ProcessedImageModel?,selectedBackgroundColor: freezed == selectedBackgroundColor ? _self.selectedBackgroundColor : selectedBackgroundColor // ignore: cast_nullable_to_non_nullable
-as Color?,showBackgroundColorPicker: null == showBackgroundColorPicker ? _self.showBackgroundColorPicker : showBackgroundColorPicker // ignore: cast_nullable_to_non_nullable
+as ProcessedImageModel?,selectedBackgroundColor: null == selectedBackgroundColor ? _self.selectedBackgroundColor : selectedBackgroundColor // ignore: cast_nullable_to_non_nullable
+as BackgroundColorOption,showBackgroundColorPicker: null == showBackgroundColorPicker ? _self.showBackgroundColorPicker : showBackgroundColorPicker // ignore: cast_nullable_to_non_nullable
 as bool,processingProgress: null == processingProgress ? _self.processingProgress : processingProgress // ignore: cast_nullable_to_non_nullable
 as int,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
 as bool,sliderCompleted: null == sliderCompleted ? _self.sliderCompleted : sliderCompleted // ignore: cast_nullable_to_non_nullable

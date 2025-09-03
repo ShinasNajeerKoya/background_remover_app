@@ -16,17 +16,17 @@ class NotchedBorderPainter extends CustomPainter {
 
     // Fill
     final fillPaint =
-    Paint()
-      ..color = fillColor
-      ..style = PaintingStyle.fill;
+        Paint()
+          ..color = fillColor
+          ..style = PaintingStyle.fill;
     canvas.drawPath(path, fillPaint);
 
     // Border
     final borderPaint =
-    Paint()
-      ..color = borderColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth;
+        Paint()
+          ..color = borderColor
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = strokeWidth;
     canvas.drawPath(path, borderPaint);
   }
 
