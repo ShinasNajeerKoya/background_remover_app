@@ -20,6 +20,11 @@ abstract class HomeState with _$HomeState {
     @Default(false) bool isProcessing,
     @Default(false) bool isSaving,
 
+
+    @Default(false) bool imagedSavedToGallery,
+
+
+
     @Default(false) bool isRemovingBackground,
 
 

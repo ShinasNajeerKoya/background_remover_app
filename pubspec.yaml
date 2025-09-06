@@ -49,6 +49,7 @@ dependencies:
   lottie: ^3.3.1
 #  gallery_saver_plus: ^3.2.9
   crop_your_image: ^2.0.0
+  simple_shadow: ^0.3.1
 
 
 
@@ -100,6 +101,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/lottie/
+    - assets/images/
 
 
 

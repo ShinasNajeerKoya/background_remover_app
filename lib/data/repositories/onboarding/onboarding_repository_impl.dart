@@ -3,6 +3,6 @@ import 'package:background_remover_app/domain/repositories/onboarding/onboarding
 class OnboardingRepositoryImpl implements OnboardingRepository {
   @override
   Future<void> completeOnboarding() async {
-    await Future.delayed(Duration(milliseconds: 1300));
+    await Future.delayed(Duration(milliseconds: 3000));
   }
 }

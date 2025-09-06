@@ -13,6 +13,7 @@ _HomeState _$HomeStateFromJson(Map<String, dynamic> json) => _HomeState(
   hasPermission: json['hasPermission'] as bool? ?? false,
   isProcessing: json['isProcessing'] as bool? ?? false,
   isSaving: json['isSaving'] as bool? ?? false,
+  imagedSavedToGallery: json['imagedSavedToGallery'] as bool? ?? false,
   isRemovingBackground: json['isRemovingBackground'] as bool? ?? false,
   processedImage:
       json['processedImage'] == null
@@ -42,6 +43,7 @@ Map<String, dynamic> _$HomeStateToJson(_HomeState instance) =>
       'hasPermission': instance.hasPermission,
       'isProcessing': instance.isProcessing,
       'isSaving': instance.isSaving,
+      'imagedSavedToGallery': instance.imagedSavedToGallery,
       'isRemovingBackground': instance.isRemovingBackground,
       'processedImage': instance.processedImage,
       'selectedBackgroundColor':
@@ -55,10 +57,8 @@ Map<String, dynamic> _$HomeStateToJson(_HomeState instance) =>
 
 const _$BackgroundColorOptionEnumMap = {
   BackgroundColorOption.black: 'black',
-  BackgroundColorOption.red: 'red',
   BackgroundColorOption.green: 'green',
   BackgroundColorOption.blue: 'blue',
   BackgroundColorOption.yellow: 'yellow',
-  BackgroundColorOption.purple: 'purple',
   BackgroundColorOption.transparent: 'transparent',
 };

@@ -126,6 +126,8 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
 
       safeEmit(state.copyWith(processingProgress: 75));
 
+      await Future.delayed(const Duration(seconds: 10));
+
       safeEmit(
         state.copyWith(
           isProcessing: false,
@@ -160,7 +162,16 @@ class HomeBloc extends Cubit<HomeState> with SafeEmitMixin<HomeState> {
       final success = await _repository.saveImageToGallery(state.processedImage!);
 
       if (success) {
-        safeEmit(state.copyWith(isSaving: false));
+        safeEmit(
+          state.copyWith(
+            isSaving: false,
+            imagedSavedToGallery: true,
+            selectedImage: null,
+            homeSelectedImage: null,
+            processedImage: null,
+          ),
+        );
+
         // You might want to show a success message here
       } else {
         safeEmit(state.copyWith(isSaving: false, error: true, errorMessage: 'Failed to save image to gallery'));
